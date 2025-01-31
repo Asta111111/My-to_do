@@ -1,6 +1,8 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
+
+
 
 
 
@@ -9,7 +11,7 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         if request.form.get('action1') == 'VALUE1':
-            pass # do something
+            return redirect("/add", code=302)
         elif  request.form.get('action2') == 'VALUE2':
             pass # do something else
         else:
@@ -18,6 +20,19 @@ def index():
         return render_template('index.html')
     
     return render_template("index.html")
+
+
+
+
+@app.route("/add",  methods=['GET', 'POST'])
+def add():
+    savetext = [] 
+    if request.method == "POST":
+        text = request.form.get('text')
+        print(text)
+        savetext.append(text)
+    return render_template("add.html")
+
 
 
 if __name__ == "__main__": 
