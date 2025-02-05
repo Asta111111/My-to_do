@@ -1,9 +1,25 @@
-<h2>Збережені тексти:</h2>
-<ul>
-    {% for text in savetext %}
-        <li>{{ text }}</li>
-    {% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Словник</title>
+</head>
+<body>
+    <form method="post">
+        <button type="submit" name="save" value="SAVE">Зберегти</button>
+    </form>
+
+    <h2>Оновлений стан словника:</h2>
+    <ul>
+        {% for key, value in save_text.items() %}
+            <li>{{ key }}: {{ value[1] }}</li>  <!-- Виводимо значення після зміни -->
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
 
 
 
