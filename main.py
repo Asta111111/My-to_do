@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for
 import random
 
 app = Flask(__name__)
@@ -29,21 +29,32 @@ id = random.randint(0, 1000000000)
 
 @app.route("/add",  methods=['GET', 'POST'])
 def add():
-    id = random.randint(0, 1000000000)
+    id
     save_text
     if request.method == "POST":
         text = request.form.get('text')
-        save_text.update({text: [id, False]})
+        save_text.update({id: [text, False]})
         print(save_text)
+
     return render_template("add.html")
 
 
 @app.route("/mylist",  methods=['GET', 'POST'])
 def mylist():
     if request.method == "POST":
-        if request.form.get('save') == 'SAVE':
+        data = request.form
+        first_key = next(iter(data))  # '522534384'
+        first_value = data[first_key]  # 'SAVE'
+        if first_value == 'SAVE':
             for key in save_text:
-                save_text[key][1] = True
+                if save_text[key] == first_key:
+                    save_text[0][1] = True
+                    
+                    
+            return redirect(url_for("mylist"))
+                
+            
+            
 
 
 

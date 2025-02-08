@@ -1,26 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Словник</title>
-</head>
-<body>
+
+<h2>Список:</h2>
+<ul>
+    {% for key, value in save_text.items() %}
     <form method="post">
-        <button type="submit" name="save" value="SAVE">Зберегти</button>
+        <button type="submit" name="{{ key }}" value="SAVE"  >Зберегти</button>
     </form>
-
-    <h2>Оновлений стан словника:</h2>
-    <ul>
-        {% for key, value in save_text.items() %}
-            <li>{{ key }}: {{ value[1] }}</li>  <!-- Виводимо значення після зміни -->
-        {% endfor %}
-    </ul>
-</body>
-</html>
+    {% if value[1] == False %}
+    <li>{{ value[0] }}</li>
+    {% else %}
+        <li>{{ Null }}</li>
+        {% endif %}
+{% endfor %}
+</ul>
 
 
 
 
+
+<h2>Виконано:</h2>
+<ul>
+    {% for value, key in save_text.items() %}
+    {% if key == save_text[key] %}
+    {% if value[1] == True %}
+    <li>{{ velue[0] }}: {{ value[1] }}</li> 
+        {% endif %}
+        {% endif %}
+    {% endfor %}
+</ul>
 
 
