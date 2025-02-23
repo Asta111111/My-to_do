@@ -1,31 +1,18 @@
-
 <h2>Список:</h2>
 <ul>
-    {% for key, value in save_text.items() %}
+    {% for datas in data %}
     <form method="post">
-        <button type="submit" name="{{ key }}" value="SAVE"  >Зберегти</button>
+        <button type="submit" name="{{ datas[0] }}" value="SAVE">Виконано</button>
     </form>
-    {% if value[1] == False %}
-    <li>{{ value[0] }}</li>
-    {% else %}
-        <li>{{ Null }}</li>
-        {% endif %}
-{% endfor %}
-</ul>
-
-
-
-
-
-<h2>Виконано:</h2>
-<ul>
-    {% for value, key in save_text.items() %}
-    {% if key == save_text[key] %}
-    {% if value[1] == True %}
-    <li>{{ velue[0] }}: {{ value[1] }}</li> 
-        {% endif %}
-        {% endif %}
+    <li>{{ datas[1] }}</li>
     {% endfor %}
 </ul>
+
+<h2>Виконано:</h2>
+<ul>{% for datas_two in data_two %}
+    <li>{{ datas_two[1] }}</li>
+    {% endfor %}
+</ul>
+
 
 

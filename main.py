@@ -1,9 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for
-import random
+import sqlite3
 
 app = Flask(__name__)
-
-
 
 
 
@@ -24,41 +22,89 @@ def index():
 
 
 
-save_text = {}
-id = random.randint(0, 1000000000)
 
 @app.route("/add",  methods=['GET', 'POST'])
 def add():
-    id
-    save_text
     if request.method == "POST":
         text = request.form.get('text')
-        save_text.update({id: [text, False]})
-        print(save_text)
-
+        my_db(text, 0)
     return render_template("add.html")
 
 
 @app.route("/mylist",  methods=['GET', 'POST'])
 def mylist():
+    data = my_db_data()
     if request.method == "POST":
-        data = request.form
-        first_key = next(iter(data))  # '522534384'
-        first_value = data[first_key]  # 'SAVE'
+        data_req = request.form
+        first_key = next(iter(data_req)) 
+        first_value = data_req[first_key]
+        first_int = int(first_key)
         if first_value == 'SAVE':
-            for key in save_text:
-                if save_text[key] == first_key:
-                    save_text[0][1] = True
-                    
-                    
-            return redirect(url_for("mylist"))
-                
-            
-            
+            for item in data:
+                list_item = list(item)
+                if list_item[0] == first_int:
+                    list_item[2] = 1
+                    if list_item[2] == 1:
+                        my_db_update(first_int)
+                        
+        
+    return render_template("list.html", data=data)
 
 
 
-    return render_template("list.html", save_text=save_text)
+def my_db(text, first_int):
+    db = sqlite3.connect('database.db') #create file and database
+
+
+    cursore = db.cursor() #create cursor
+
+    #create something, control databse
+    cursore.execute("""CREATE TABLE IF NOT EXISTS question (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        mytext TEXT NOT NULL,
+        value INTEGER NOT NULL DEFAULT 0 CHECK(value IN (0,1))
+        
+    )""") 
+
+
+    cursore.execute("INSERT INTO question (mytext) VALUES (?)", (text,))
+
+
+    cursore.execute("SELECT mytext FROM question")
+    db.commit()
+
+
+    db.close() 
+
+
+def my_db_update(first_int):
+    db = sqlite3.connect('database.db') 
+
+
+    cursore = db.cursor() 
+
+
+    cursore.execute(f"UPDATE question SET value = ((value | 1) - (value & 1)) WHERE id = {first_int}")
+    print(first_int)
+
+
+    db.commit() 
+
+
+    db.close()
+
+
+def my_db_data():
+    db = sqlite3.connect('database.db') 
+
+
+    cursore = db.cursor() 
+
+    cursore.execute("SELECT * FROM question")
+    data = cursore.fetchall()
+
+    db.close() 
+    return data
 
 
 
