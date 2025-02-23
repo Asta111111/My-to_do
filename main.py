@@ -27,7 +27,7 @@ def index():
 def add():
     if request.method == "POST":
         text = request.form.get('text')
-        my_db(text, 0)
+        my_db(text)
     return render_template("add.html")
 
 
@@ -47,12 +47,13 @@ def mylist():
                     if list_item[2] == 1:
                         my_db_update(first_int)
                         
-        
-    return render_template("list.html", data=data)
+                        
+    data_update_req = my_db_update_data()   
+    return render_template("list.html", data=data, data_update_req=data_update_req)
 
 
 
-def my_db(text, first_int):
+def my_db(text):
     db = sqlite3.connect('database.db') #create file and database
 
 
@@ -85,7 +86,7 @@ def my_db_update(first_int):
 
 
     cursore.execute(f"UPDATE question SET value = ((value | 1) - (value & 1)) WHERE id = {first_int}")
-    print(first_int)
+
 
 
     db.commit() 
@@ -106,6 +107,18 @@ def my_db_data():
     db.close() 
     return data
 
+
+def my_db_update_data():
+    db = sqlite3.connect('database.db') 
+
+
+    cursore = db.cursor() 
+
+    cursore.execute("SELECT * FROM question WHERE value = 1")
+    data_update = cursore.fetchall()
+    db.close() 
+    
+    return data_update
 
 
 
