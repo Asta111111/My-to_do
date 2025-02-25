@@ -1,16 +1,19 @@
 <h2>Список:</h2>
 <ul>
-    {% for datas in data %}
+    {% for list_time in time_list %}
     <form method="post">
-        <button type="submit" name="{{ datas[0] }}" value="SAVE">Виконано</button>
+        <button type="submit" name="{{ list_time[0] }}" value="SAVE">Виконано</button>
     </form>
-    <li>{{ datas[1] }}</li>
+    <li>{{ list_time[1] }}</li>
+    <li>{{ list_time[3] }}</li>
     {% endfor %}
 </ul>
 
 <h2>Виконано:</h2>
+
 <ul>{% for datas_update in data_update_req %}
     <li>{{ datas_update[1] }}</li>
+    <li>{{ datas_update[3] }}</li>
     {% endfor %}
 </ul>
 

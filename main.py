@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for
-import sqlite3
+import sqlite3 
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -34,6 +36,7 @@ def add():
 @app.route("/mylist",  methods=['GET', 'POST'])
 def mylist():
     data = my_db_data()
+    time_list = data
     if request.method == "POST":
         data_req = request.form
         first_key = next(iter(data_req)) 
@@ -46,29 +49,32 @@ def mylist():
                     list_item[2] = 1
                     if list_item[2] == 1:
                         my_db_update(first_int)
+        
+        return redirect(url_for("mylist")) 
                         
                         
     data_update_req = my_db_update_data()   
-    return render_template("list.html", data=data, data_update_req=data_update_req)
+    return render_template("list.html", data=data, data_update_req=data_update_req, time_list=time_list)
 
 
 
 def my_db(text):
     db = sqlite3.connect('database.db') #create file and database
-
+    list_time = datetime.now().date()
 
     cursore = db.cursor() #create cursor
 
     #create something, control databse
-    cursore.execute("""CREATE TABLE IF NOT EXISTS question (
+    cursore.execute(f"""CREATE TABLE IF NOT EXISTS question (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         mytext TEXT NOT NULL,
-        value INTEGER NOT NULL DEFAULT 0 CHECK(value IN (0,1))
-        
+        value INTEGER NOT NULL DEFAULT 0 CHECK(value IN (0,1)),
+        date DATE 
+
     )""") 
 
 
-    cursore.execute("INSERT INTO question (mytext) VALUES (?)", (text,))
+    cursore.execute("INSERT INTO question (mytext, value, date) VALUES (?, ?, ?)", (text, 0, list_time,))
 
 
     cursore.execute("SELECT mytext FROM question")
@@ -76,6 +82,7 @@ def my_db(text):
 
 
     db.close() 
+
 
 
 def my_db_update(first_int):
@@ -86,7 +93,6 @@ def my_db_update(first_int):
 
 
     cursore.execute(f"UPDATE question SET value = ((value | 1) - (value & 1)) WHERE id = {first_int}")
-
 
 
     db.commit() 
